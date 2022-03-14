@@ -22,13 +22,7 @@ Resources:
                 Resource:
                   - "arn:aws:s3:::holds-json-resources/*"
  
- # add user to group
-  AddUserToGroup:
-    Type: AWS::IAM::UserToGroupAddition
-    Properties:
-        GroupName: circleci
-        Users:
-          - !Ref MyIamUser
+
  # creates ecr repository
   MyPublicRepositry:
     Type: AWS::ECR::PublicRepository
@@ -43,13 +37,22 @@ Resources:
           - "x86"
           - "ARM"
         RepositoryDescription: "holds the docker images for testing"
-  # createa erc private repository
-  MyRepository: 
-    Type: AWS::ECR::Repository
-    Properties: 
-      RepositoryName: "erc-test-repo-cicd"
 
-           
+
+    
+  # createa erc private repository
+  # MyRepository: 
+  #   Type: AWS::ECR::Repository
+  #   Properties: 
+  #     RepositoryName: "erc-test-repo-cicd"
+
+   # add user to group
+  # AddUserToGroup:
+  #   Type: AWS::IAM::UserToGroupAddition
+  #   Properties:
+  #       GroupName: circleci
+  #       Users:
+  #         - !Ref MyIamUser         
    
    
     

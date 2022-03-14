@@ -27,7 +27,8 @@ const getBucketNameAndFileName = (url) => {
   return { bucketName, fileName };
 };
 
-
+console.log("Hello World!");
+console.log("*****************************");
 const { bucketName, fileName } = getBucketNameAndFileName(process.env.S3_URL);
 console.log(`Downloading ${fileName} from ${bucketName}`);
 // get the file from s3
@@ -49,4 +50,4 @@ s3FileStream.on("finish", () => {
 
 console.log("File downloaded");
 console.log("File is being piped to stdout");
-console.log("Hell World");
+console.log("*****************************");

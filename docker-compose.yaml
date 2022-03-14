@@ -1,13 +1,8 @@
 version: '3.9'
 
 services:
-  node_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: node_app
-    volumes:
-      - .:/app
+  node-app:
+    image: "public.ecr.aws/f6d3m9u4/erc-test-repo:latest"
     environment:
       - S3_URL=s3://holds-json-resources/msg.json
 
