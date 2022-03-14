@@ -49,3 +49,4 @@ s3FileStream.on("finish", () => {
 
 console.log("File downloaded");
 console.log("File is being piped to stdout");
+console.log("Hell World");
