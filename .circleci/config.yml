@@ -6,7 +6,7 @@ orbs:
 
 jobs:
     test:
-     excutor:
+     executor:
        name: node/default
        tag: 16.10.0
      steps:
