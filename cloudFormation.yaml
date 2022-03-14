@@ -10,6 +10,7 @@ Resources:
   MyIamUser:
     Type: AWS::IAM::User
     Properties:
+      UserName: "my-user"
       Policies:
         - PolicyName: MyPolicy
           PolicyDocument:
@@ -20,7 +21,14 @@ Resources:
                   - s3:GetObject
                 Resource:
                   - "arn:aws:s3:::holds-json-resources/*"
-
+ 
+ # add user to group
+  AddUserToGroup:
+    Type: AWS::IAM::UserToGroupAddition
+    Properties:
+        GroupName: circleci
+        Users:
+          - !Ref MyIamUser
  # creates ecr repository
   MyPublicRepositry:
     Type: AWS::ECR::PublicRepository
@@ -36,20 +44,13 @@ Resources:
           - "ARM"
         RepositoryDescription: "holds the docker images for testing"
   # createa erc private repository
-  MyPrivateRepositry:
+  MyRepository: 
     Type: AWS::ECR::Repository
-    Properties:
+    Properties: 
       RepositoryName: "erc-test-repo-cicd"
-      RepositoryCatalogData:
-        UsageText: "this is a test repo"
-        AboutText: "this repo is us for testing circleci and docker"
-        OperatingSystems:
-          - "Linux"
-        Architectures:
-          - "x86"
-          - "ARM"
-        RepositoryDescription: "holds the docker images for testing"
-        
+
+           
+   
    
     
 
