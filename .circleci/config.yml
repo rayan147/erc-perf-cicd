@@ -4,9 +4,30 @@ orbs:
   aws-ecr: circleci/aws-ecr@7.3.0
   aws-ecs: circleci/aws-ecs@2.2.1
 
+jobs:
+    test:
+     excutor:
+       name: node/default
+       tag: 16.10.0
+     steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+         command: npm run test
+         name: jest tests
+      - store_artifacts:
+            path: "**/*"
+            destination: "./artifacts"
+      - store_artifacts:
+            path: "**/*"
+            destination: "./artifacts"
+
 workflows:
   build-and-deploy:
     jobs:
       - aws-ecr/build-and-push-image:
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
-          tag: "${CIRCLE_SHA1}"
+          tag: "latest,v0.1.${CIRCLE_BUILD_NUM}"
+          dockerfile: Dockerfile
+          path: .
