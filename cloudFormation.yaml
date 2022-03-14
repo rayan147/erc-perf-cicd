@@ -25,6 +25,20 @@ Resources:
   MyPublicRepositry:
     Type: AWS::ECR::PublicRepository
     Properties:
+      RepositoryName: "erc-test-repo"
+      RepositoryCatalogData:
+        UsageText: "this is a test repo"
+        AboutText: "this repo is public and to pull images from using docker-compose"
+        OperatingSystems:
+          - "Linux"
+        Architectures:
+          - "x86"
+          - "ARM"
+        RepositoryDescription: "holds the docker images for testing"
+  # createa erc private repository
+  MyPrivateRepositry:
+    Type: AWS::ECR::Repository
+    Properties:
       RepositoryName: "erc-test-repo-cicd"
       RepositoryCatalogData:
         UsageText: "this is a test repo"
@@ -35,6 +49,7 @@ Resources:
           - "x86"
           - "ARM"
         RepositoryDescription: "holds the docker images for testing"
+        
    
     
 
