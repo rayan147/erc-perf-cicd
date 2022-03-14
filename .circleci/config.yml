@@ -30,4 +30,4 @@ workflows:
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: "latest,v0.1.${CIRCLE_BUILD_NUM}"
           dockerfile: Dockerfile
-          path: .
+          path: ../
