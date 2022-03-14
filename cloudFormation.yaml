@@ -1,0 +1,47 @@
+Resources:
+# creates a bucket and uploads a file to it
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "holds-json-resources"
+      AccessControl: Private
+ 
+# create iam user with inline policy access read only to s3 bucket
+  MyIamUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: MyPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - "arn:aws:s3:::holds-json-resources/*"
+
+ # creates ecr repository
+  MyPublicRepositry:
+    Type: AWS::ECR::PublicRepository
+    Properties:
+      RepositoryName: "erc-test-repo-cicd"
+      RepositoryCatalogData:
+        UsageText: "this is a test repo"
+        AboutText: "this repo is us for testing circleci and docker"
+        OperatingSystems:
+          - "Linux"
+        Architectures:
+          - "x86"
+          - "ARM"
+        RepositoryDescription: "holds the docker images for testing"
+   
+    
+
+
+ 
+   
+
+
+
+  

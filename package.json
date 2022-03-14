@@ -5,11 +5,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test":  "jest"
   },
   "author": "Rayan Ramirez",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1092.0"
+    "aws-sdk": "^2.1092.0",
+    "dotenv": "^16.0.0",
+    "jest": "^27.5.1"
   }
 }
