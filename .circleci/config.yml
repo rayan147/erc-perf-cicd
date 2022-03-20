@@ -34,7 +34,7 @@ jobs:
       - run:
           name: build docker image
           command: |
-            docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/{{.Project}}:{{.Version}} .
+            docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$AWS_RESOURCE_NAME_PREFIX:{{.Version}} .
       - run: 
           name: push docker image to ECR
           command: |
