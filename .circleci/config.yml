@@ -32,17 +32,20 @@ jobs:
           command: |
             docker-compose --version
       - run:
+          name: loging into erc
+          command: |
+            aws ecr get-login-password --region $AWS_REGION --profile default | docker login --username AWS --password-stdin $AWS_ECR_ACCOUNT_URL
+      - run:
           name: build docker image
           command: |
             docker build -t $AWS_RESOURCE_NAME_PREFIX .
       - run:
           name: tagging docker image
           command: |
-            docker tag $AWS_RESOURCE_NAME_PREFIX:latest $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/:$AWS_RESOURCE_NAME_PREFIX:latest
+            docker tag $AWS_RESOURCE_NAME_PREFIX:latest $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$AWS_RESOURCE_NAME_PREFIX:latest
       - run: 
           name: push docker image to ECR
           command: |
-            aws ecr get-login-password --region $AWS_REGION --profile default | docker login --username AWS --password-stdin $AWS_ECR_ACCOUNT_URL
             docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$AWS_RESOURCE_NAME_PREFIX:latest
 
 
