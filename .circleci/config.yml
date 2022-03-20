@@ -32,14 +32,9 @@ jobs:
           command: |
             docker-compose --version
       - run:
-          name: set aws profile
-          command: |
-            aws configure
-            
-      - run:
           name: loging into erc
           command: |
-            aws ecr get-login-password --region $AWS_REGION --profile default | docker login --username AWS --password-stdin $AWS_ECR_ACCOUNT_URL
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_ACCOUNT_URL
       - run:
           name: build docker image
           command: |
