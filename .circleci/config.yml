@@ -44,11 +44,9 @@ jobs:
 
 workflows:
    version: 2.1
-   execute:
-      - name: build
-        jobs:
-          - build
-         
+   execute_bulk:
+      jobs:
+        - build
    
          
         
