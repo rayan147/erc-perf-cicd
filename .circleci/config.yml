@@ -12,6 +12,15 @@ jobs:
             sudo apt-get update
             sudo apt install -y python3-pip
             sudo pip3 install awscli --upgrade
+            sudo apt-get update
+      - run:
+           name: update aws cli
+           command: |
+              aws --version
+              aws s3 cp s3://aws-cli/latest/awscli-bundle.zip .
+              unzip awscli-bundle.zip
+              ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+              aws --version
       - run:
           name: installing docker
           command: |
@@ -34,7 +43,7 @@ jobs:
       - run:
           name: loging into erc
           command: |
-            $(aws ecr get-login --no-include-email --region us-east-1)
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 780724496220.dkr.ecr.us-east-1.amazonaws.com
       - run:
           name: build docker image
           command: |
