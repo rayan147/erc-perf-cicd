@@ -58,7 +58,7 @@ commands:
               command: |
                   aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f6d3m9u4
    
-  docker-build-image:
+  docker-build-image-and-push-to-ecr:
         description: "Build Docker Image and push to ECR"
         steps:
           - run:
@@ -77,6 +77,7 @@ jobs:
        - checkout
        - install-awscli-v2
        - login-aws-erc
+       - docker-build-image-and-push-to-ecr
        - restore-cache
        - save-cache
 workflows:
