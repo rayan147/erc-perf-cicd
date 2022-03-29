@@ -7,6 +7,34 @@ executors:
      working_directory: ~/repo
 
 commands:
+  installing-dependencies:
+     description: "Installing nodejs 17.7.2"
+     steps:
+       - run:
+            name: "Installing nodejs 17.7.2"
+            working_directory: ~/repo
+            command: | 
+              sudo apt-get update 
+              sudo apt-get install -y nodejs
+              npm install
+
+
+  restore-cache:
+     description: "Restoring cache"
+     steps:
+        - restore_cache:
+              keys:
+                - app-{{ checksum "package.json" }}
+                - app-
+  save-cache:
+     description: "Saving cache"
+     steps:
+        - save_cache:
+              paths:
+                - node_modules
+              key: -app-{{ checksum "package.json" }}
+               
+   
   install-awscli-v2:
      description: "Install AWS CLI v2"
      steps:
@@ -44,11 +72,13 @@ commands:
                 
 jobs:
   push-to-aws-ecr:
-  executor: app
-  steps:
-    - checkout
-    - install-awscli-v2
-    - login-aws-erc
+     executor: app
+     steps:
+       - checkout
+       - install-awscli-v2
+       - login-aws-erc
+       - restore-cache
+       - save-cache
 workflows:
   push-container-to-ecr:
     jobs:
