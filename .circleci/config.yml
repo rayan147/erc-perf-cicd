@@ -1,64 +1,63 @@
 version: 2.1
 
-jobs:
-  build:
-    machine:
-      image: ubuntu-2004:202010-01
-    steps:
-      - checkout
-      - run:
-          name: remove aws cli
-          command: apt-get remove -y awscli
-      - run:
-          name: installing AWS CLI
-          command: |
-             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-             unzip awscliv2.zip
-             sudo ./aws/install
-             aws --version
-      - run:
-          name: installing docker
-          command: |
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-            sudo apt-get update
-            sudo apt-get install -y docker-ce
-            docker version
-      - run:
-          name: installing docker-compose
-          command: |
-            sudo mkdir -p ~/.docker/cli-plugins/
-            sudo curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
-            sudo chmod +x ~/.docker/cli-plugins/docker-compose
-            sudo chown -R $USER ~/.docker/cli-plugins/docker-compose
-      - run:
-          name: checking docker compose version
-          command: |
-            docker-compose --version
-      - run:
-          name: loging into erc
-          command: |
-            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 780724496220.dkr.ecr.us-east-1.amazonaws.com
-      - run:
-          name: build docker image
-          command: |
-            docker build -t $AWS_RESOURCE_NAME_PREFIX .
-      - run:
-          name: tagging docker image
-          command: |
-            docker tag $AWS_RESOURCE_NAME_PREFIX:latest $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$AWS_RESOURCE_NAME_PREFIX:latest
-      - run: 
-          name: push docker image to ECR
-          command: |
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$AWS_RESOURCE_NAME_PREFIX:latest
+executors:
+   app:
+     machine:
+       image: ubuntu-2004:202010-01
+     working_directory: ~/repo
 
+commands:
+  install-awscli-v2:
+     description: "Install AWS CLI v2"
+     steps:
+       - run:
+            name: "Installing AWS CLI v2"
+            working_directory: ~/repo
+            command: |
+               sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+               sudo unzip awscliv2.zip
+               sudo ./aws/install
+               sudo rm -rf awscliv2.zip
+               sudo rm -rf aws
+               aws --version 
 
-workflows:
-   version: 2.1
-   execute_bulk:
-      jobs:
-        - build
+  login-aws-erc:
+      description: "Login to AWS ECR"
+      steps:
+        - run:
+              name: "Login to AWS ECR"
+              working_directory: ~/repo
+              command: |
+                  aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f6d3m9u4
    
+  docker-build-image:
+        description: "Build Docker Image and push to ECR"
+        steps:
+          - run:
+              name: "Building Docker Image and pushing to ECR"
+              working_directory: ~/repo
+              command: |
+                docker build -t erc-test-repo .
+                docker tag erc-test-repo:latest public.ecr.aws/f6d3m9u4/erc-test-repo:latest
+                docker push public.ecr.aws/f6d3m9u4/erc-test-repo:latest
+                echo "Docker Image pushed to ECR"
+                
+jobs:
+  push-to-aws-ecr:
+  executor: app
+  steps:
+    - checkout
+    - install-awscli-v2
+    - login-aws-erc
+workflows:
+  push-container-to-ecr:
+    jobs:
+      - push-to-aws-ecr
+   
+    
+
+      
+     
          
         
 
